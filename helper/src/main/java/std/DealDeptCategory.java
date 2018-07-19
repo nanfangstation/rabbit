@@ -22,6 +22,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import lombok.Data;
+
 /**
  * 匹配标准科室分类
  *
@@ -69,33 +71,51 @@ public class DealDeptCategory {
         String lineContent2 = "";
         int i = 0;
         int j = 0;
-        List<String> all = new ArrayList<String>();
-        List<String> in = new ArrayList<String>();
+        List<Temp> all = new ArrayList<Temp>();
+        List<Temp> in = new ArrayList<Temp>();
         while ((lineContent2 = reader2.readLine()) != null) {
             j++;
             Pattern pattern = Pattern.compile("(\\S+)(\\s+)(\\S+)");
             Matcher matcher = pattern.matcher(lineContent2);
             if (matcher.find()) {
-                all.add(matcher.group(3));
+                Temp temp = new Temp();
+                temp.setId(matcher.group(1));
+                temp.setName(matcher.group(3));
+                all.add(temp);
                 for (Map.Entry<String, LinkedList<String>> entry : categoryMap.entrySet()) {
                     LinkedList<String> linkedList = entry.getValue();
                     if (linkedList.size() == 3) {
                         String content = null;
                         if (linkedList.get(0).equals(matcher.group(3))) {
-                            in.add(matcher.group(3));
-                            content = matcher.group(3) + " |全匹配|" + linkedList.get(0);
+                            Temp hello = new Temp();
+                            hello.setId(matcher.group(1));
+                            hello.setName(matcher.group(3));
+                            in.add(hello);
+                            content =
+                                matcher.group(1) + "|" + matcher.group(3) + " |全匹配|" + linkedList.get(0) + "|" + entry
+                                    .getKey();
                             System.out.println(content);
                             writeFileByFileWriter("/Users/nanfang/Desktop/3.txt", content);
                             i++;
                         } else if (matcher.group(3).contains(linkedList.get(1))) {
-                            in.add(matcher.group(3));
-                            content = matcher.group(3) + " |半匹配1|" + linkedList.get(1);
+                            Temp hello = new Temp();
+                            hello.setId(matcher.group(1));
+                            hello.setName(matcher.group(3));
+                            in.add(hello);
+                            content =
+                                matcher.group(1) + "|" + matcher.group(3) + " |半匹配1|" + linkedList.get(1) + "|" + entry
+                                    .getKey();
                             System.out.println(content);
                             writeFileByFileWriter("/Users/nanfang/Desktop/3.txt", content);
                             i++;
                         } else if (matcher.group(3).contains(linkedList.get(2))) {
-                            in.add(matcher.group(3));
-                            content = matcher.group(3) + " |半匹配2|" + linkedList.get(2);
+                            Temp hello = new Temp();
+                            hello.setId(matcher.group(1));
+                            hello.setName(matcher.group(3));
+                            in.add(hello);
+                            content =
+                                matcher.group(1) + "|" + matcher.group(3) + " |半匹配2|" + linkedList.get(2) + "|" + entry
+                                    .getKey();
                             System.out.println(content);
                             writeFileByFileWriter("/Users/nanfang/Desktop/3.txt", content);
                             i++;
@@ -103,20 +123,30 @@ public class DealDeptCategory {
                     } else if (linkedList.size() == 2) {
                         String content = null;
                         if (linkedList.get(0).equals(matcher.group(3))) {
-                            in.add(matcher.group(3));
-                            content = matcher.group(3) + " |全匹配|" + linkedList.get(0);
+                            Temp hello = new Temp();
+                            hello.setId(matcher.group(1));
+                            hello.setName(matcher.group(3));
+                            in.add(hello);
+                            content =
+                                matcher.group(1) + "|" + matcher.group(3) + " |全匹配|" + linkedList.get(0) + "|" + entry
+                                    .getKey();
                             System.out.println(content);
                             writeFileByFileWriter("/Users/nanfang/Desktop/3.txt", content);
                             i++;
                         } else if (matcher.group(3).contains(linkedList.get(1))) {
-                            in.add(matcher.group(3));
-                            content = matcher.group(3) + " |半匹配1|" + linkedList.get(1);
+                            Temp hello = new Temp();
+                            hello.setId(matcher.group(1));
+                            hello.setName(matcher.group(3));
+                            in.add(hello);
+                            content =
+                                matcher.group(1) + "|" + matcher.group(3) + " |半匹配1|" + linkedList.get(1) + "|" + entry
+                                    .getKey();
                             System.out.println(content);
                             writeFileByFileWriter("/Users/nanfang/Desktop/3.txt", content);
                             i++;
                         }
                     } else {
-                        String content = matcher.group(3) + "|无匹配|";
+                        String content = matcher.group(1) + "|" + matcher.group(3) + "|无匹配|";
                         System.out.println(content);
                         writeFileByFileWriter("/Users/nanfang/Desktop/3.txt", content);
                         i++;
@@ -127,8 +157,8 @@ public class DealDeptCategory {
             }
         }
         all.stream().filter(line -> !in.contains(line)).collect(Collectors.toList()).forEach(content -> {
-            System.out.println(content + "|无匹配|");
-            writeFileByFileWriter("/Users/nanfang/Desktop/3.txt", content + "|无匹配|");
+            System.out.println(content.getId() + "|" + content.getName() + "|无匹配|");
+            writeFileByFileWriter("/Users/nanfang/Desktop/3.txt", content.getId() + "|" + content.getName() + "|无匹配|");
         });
         System.out.println("总i: " + i);
         System.out.println("总j: " + j);
@@ -146,4 +176,10 @@ public class DealDeptCategory {
             e.printStackTrace();
         }
     }
+}
+
+@Data
+class Temp {
+    private String id;
+    private String name;
 }

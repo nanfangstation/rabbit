@@ -7,9 +7,25 @@
     <groupId>com.nanfang</groupId>
     <artifactId>helper</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <properties>
-        <v.lombok.version>1.18.0</v.lombok.version>
+        <v.apache.httpclient>4.3</v.apache.httpclient>
+        <v.fastjson>1.2.47</v.fastjson>
+        <v.gwt-dev>2.7.0</v.gwt-dev>
         <v.junit>4.0</v.junit>
+        <v.lombok.version>1.18.0</v.lombok.version>
+        <v.slf4j>1.7.5</v.slf4j>
     </properties>
     <dependencies>
         <dependency>
@@ -22,6 +38,26 @@
             <artifactId>lombok</artifactId>
             <version>${v.lombok.version}</version>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${v.fastjson}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${v.apache.httpclient}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${v.slf4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${v.gwt-dev}</version>
         </dependency>
     </dependencies>
 
