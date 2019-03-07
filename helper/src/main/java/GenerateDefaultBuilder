@@ -1,0 +1,75 @@
+import lombok.Builder;
+import lombok.Data;
+import org.junit.Test;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * 根据属性生成Builder
+ * @author Lydia
+ * @version V1.0
+ * @since 2019-01-09 16:34:26
+ */
+public class GenerateDefaultBuilder {
+
+    @Test
+    public void testPrint() {
+        print(Entity.builder().build());
+    }
+    /* output:
+    Entity.builder()
+    .name(Entity.getName())
+    .id(Entity.getId()).build();
+    * */
+
+    public static <T> void print(T target) {
+        Field[] fields = target.getClass().getDeclaredFields();
+        Set<String> fieldSet = new HashSet<String>();
+        for (Field field : fields) {
+            fieldSet.add(field.getName());
+        }
+        Method[] methods = target.getClass().getDeclaredMethods();
+        char[] nameChar = target.getClass().getSimpleName().toCharArray();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(nameChar);
+        stringBuilder.append(".builder()");
+
+        for (Method method : methods) {
+            String methodName = method.getName();
+            String fieldName = methodName.substring(3, methodName.length());
+            char[] fieldChar = fieldName.toCharArray();
+            fieldChar[0] += 32;
+            String lowerFieldName = String.valueOf(fieldChar);
+            if (methodName.startsWith("set") && fieldSet.contains(lowerFieldName)) {
+                Type[] parameterTypes = method.getGenericParameterTypes();
+                Type type = parameterTypes[0];
+                stringBuilder.append("\n");
+                stringBuilder.append(".");
+                stringBuilder.append(lowerFieldName);
+                stringBuilder.append("(");
+
+                if (!type.toString().contains("Void")) {
+                    stringBuilder.append(target.getClass().getSimpleName());
+                    stringBuilder.append(".get");
+                    stringBuilder.append(fieldName);
+                    stringBuilder.append("()");
+                }
+                stringBuilder.append(")");
+
+            }
+        }
+        stringBuilder.append(".build();");
+        System.out.println(stringBuilder.toString());
+    }
+}
+
+@Data
+@Builder
+class Entity {
+    private Integer id;
+    private String name;
+}
